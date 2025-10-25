@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import WishCard from "@/components/WishCard";
@@ -5,7 +6,7 @@ import ContactForm from "@/components/ContactForm";
 import { Progress } from "@/components/ui/progress";
 
 const Index = () => {
-  const wishes = [
+  const initialWishes = [
     {
       id: 1,
       title: "Путешествие в Японию",
@@ -56,13 +57,32 @@ const Index = () => {
     }
   ];
 
+  const [wishes, setWishes] = useState(() => {
+    const saved = localStorage.getItem('wishes');
+    return saved ? JSON.parse(saved) : initialWishes;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('wishes', JSON.stringify(wishes));
+  }, [wishes]);
+
+  const toggleAchieved = (id: number) => {
+    setWishes(wishes.map(wish => 
+      wish.id === id ? { ...wish, achieved: !wish.achieved } : wish
+    ));
+  };
+
   const achievedCount = wishes.filter(w => w.achieved).length;
   const progressPercent = (achievedCount / wishes.length) * 100;
 
   return (
     <div className="min-h-screen">
       <Header />
-      <Hero />
+      <Hero 
+        totalWishes={wishes.length}
+        achievedCount={achievedCount}
+        progressPercent={progressPercent}
+      />
       
       <section id="wishes" className="py-20 px-4">
         <div className="container mx-auto">
@@ -75,7 +95,7 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {wishes.map((wish) => (
-              <WishCard key={wish.id} {...wish} />
+              <WishCard key={wish.id} {...wish} onToggle={() => toggleAchieved(wish.id)} />
             ))}
           </div>
         </div>

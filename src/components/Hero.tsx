@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/icon";
 
-const Hero = () => {
+interface HeroProps {
+  totalWishes: number;
+  achievedCount: number;
+  progressPercent: number;
+}
+
+const Hero = ({ totalWishes, achievedCount, progressPercent }: HeroProps) => {
   const scrollToWishes = () => {
     const element = document.getElementById('wishes');
     element?.scrollIntoView({ behavior: 'smooth' });
@@ -29,15 +35,15 @@ const Hero = () => {
           
           <div className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto">
             <div className="text-center animate-scale-in" style={{ animationDelay: '0.2s' }}>
-              <div className="text-4xl font-bold text-primary mb-2">12</div>
+              <div className="text-4xl font-bold text-primary mb-2">{totalWishes}</div>
               <div className="text-sm text-muted-foreground">Желаний</div>
             </div>
             <div className="text-center animate-scale-in" style={{ animationDelay: '0.4s' }}>
-              <div className="text-4xl font-bold text-primary mb-2">5</div>
+              <div className="text-4xl font-bold text-primary mb-2">{achievedCount}</div>
               <div className="text-sm text-muted-foreground">Достигнуто</div>
             </div>
             <div className="text-center animate-scale-in" style={{ animationDelay: '0.6s' }}>
-              <div className="text-4xl font-bold text-primary mb-2">42%</div>
+              <div className="text-4xl font-bold text-primary mb-2">{Math.round(progressPercent)}%</div>
               <div className="text-sm text-muted-foreground">Прогресс</div>
             </div>
           </div>
